@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+umask 077
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ACTION=${1:---help}
+NODE_HOME=${2:-"$HOME/.tavchain-testnet-771002"}
+fail() { echo "$*" >&2; exit 1; }
+case "$ACTION" in
+  --help|-h) echo "Usage: ./tavchain-node init|start [absolute-node-home]"; exit 0 ;;
+  init|start) ;;
+  *) fail "Use init or start; see --help." ;;
+esac
+[ "$#" -le 2 ] || fail "Too many arguments; see --help."
+case "$NODE_HOME" in /*) ;; *) fail "Node home must be an absolute path." ;; esac
+[ "$(uname -s)" = Linux ] || fail "This package requires Linux."
+case "$(uname -m)" in x86_64) ARCH=amd64 ;; aarch64|arm64) ARCH=arm64 ;; *) fail "Unsupported CPU architecture." ;; esac
+[ "$(cat "$ROOT/ARCH")" = "$ARCH" ] || fail "Download the package for this CPU architecture."
+(cd "$ROOT" && sha256sum --check --status SHA256SUMS) || fail "Package integrity check failed. Stop and verify the download."
+case "$ACTION" in
+  init)
+    [ ! -e "$NODE_HOME" ] && [ ! -L "$NODE_HOME" ] || fail "Node home already exists. Keep it; do not initialize again."
+    mkdir -p -- "$(dirname -- "$NODE_HOME")"
+    mkdir -m 700 -- "$NODE_HOME"
+    "$ROOT/bin/tavchaind" init my-tavchain-fullnode --chain-id tavchaintestnet_771002-1 --default-denom atav --home "$NODE_HOME"
+    cp -- "$ROOT/network/genesis.json" "$ROOT/network/config.toml" "$ROOT/network/app.toml" "$NODE_HOME/config/"
+    printf '%s\n' tavchaintestnet_771002-1 > "$NODE_HOME/.tavchain-native-bundle"
+    echo "Initialized $NODE_HOME. Start with: ./tavchain-node start"
+    ;;
+  start)
+    [ -f "$NODE_HOME/.tavchain-native-bundle" ] || fail "Home is not initialized by this bundle. Do not overwrite existing state."
+    [ "$(cat "$NODE_HOME/.tavchain-native-bundle")" = tavchaintestnet_771002-1 ] || fail "Wrong network marker."
+    exec "$ROOT/bin/tavchaind" start --home "$NODE_HOME" --genesis_hash a101ab9ccf1478757af8a69d832548ea1167e552fe6d6ef6621a77447a54e924
+    ;;
+esac
