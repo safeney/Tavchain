@@ -1,0 +1,9 @@
+Tavchain node 1.8.1-tavchain.eval1 - release-candidate notices
+
+Derived from Cronos commit616274a74d4f4747e67fad7f895c000e90a3ec6a. Copyright2021-present Cronos Labs. Apache2.0 upstream terms preserved. Tavchain changes identify the executable/network/address prefixes and asset metadata; exact diff/source manifest accompany this preparation.
+
+Uses the go-ethereum library from crypto-org-chain/go-ethereum commit663dca6c618e, governed by LGPLv3. LGPLv3 and its GPLv3 base text accompany the exact dependency sources. Application and dependency source archives plus native build instructions provide the proposed rebuilding/recombining arrangement under approved EVMSOURCEPOLICY1 permissions. No old custom-node reverse-engineering/private-source/rehosting restriction is applied to these upstream components.
+
+Existing third-party licenses, copyrights and notices remain in force. Nested notice files are indexed and retained. The complete dependency module zip files preserve their upstream source and notice files. Go standard library LICENSE/PATENTS included separately. System libc is not redistributed; host glibc loader/libc required.
+
+No upstream endorsement. Unsigned/unpublished preparation. Tavchain modification permissions approved under EVMSOURCEPOLICY1; signing/publication pending.

@@ -27,11 +27,16 @@ The initial four validators remain under shared administration. The testnet is e
 
 ## Downloads
 
-Use the [native installation guide](https://docs.tavchain.safeney.com/tavchain/operate/node-native) for Linux x86-64, Linux ARM64 and Windows x86-64. Verify the [signed native release manifest](https://testnet.tavchain.safeney.com/downloads/tavchain-native-1.8.1-tavchain.eval1-native1/NATIVE-RELEASE.json) and its detached signature before extracting or running a download. The guide includes the trusted release-key fingerprint, platform commands and the separate authenticated 771002 network configuration.
+Use the versioned GitHub releases:
+- [Native full-node clients](https://github.com/safeney/Tavchain/releases/tag/native-1.8.1-tavchain.eval1-native1): Linux x86-64, Linux ARM64 and Windows x86-64, with exact source and runtime notices.
+- [Current network and Hardhat starter](https://github.com/safeney/Tavchain/releases/tag/network-771002-1): authenticated configuration for chain 771002 and the complete starter ZIP.
+- [Docker full-node package](https://github.com/safeney/Tavchain/releases/tag/docker-771002-1): complete Linux amd64 archive with the executable, Compose configuration and network files.
 
-These clients passed non-validator synchronization, fixed-height state comparisons, graceful shutdown and same-identity restart on their tested environments. macOS and Windows ARM64 binaries are not provided. The [Docker package](https://docs.tavchain.safeney.com/tavchain/operate/node-docker) remains a separate Linux amd64 release.
+These assets mirror the existing published downloads without changing their bytes or signatures. Authenticate the applicable signed manifest using the release-key fingerprint in the [installation guides](https://docs.tavchain.safeney.com/tavchain/operate). The original testnet download URLs remain available. GitHub's automatic source ZIP is not a compiled executable.
 
-The native download directory also contains the exact source archive, packaging patch, build instructions and runtime notices. Its four packaging changes are separate from the earlier source snapshot under `node/`. Downloading this release does not upgrade running validators.
+Browse the complete [Hardhat starter source](examples/hardhat), [Docker packaging source](operators/docker) and [native packaging references](distribution/native1). The Docker source directory omits the large executable; use its complete release archive to run it. A public prebuilt container image is not included in this publication.
+
+Full-node testing does not establish validator-signing support for the native1 platforms. macOS and Windows ARM64 downloads are not available. No running validator is upgraded by this repository update.
 
 ## Source layout
 

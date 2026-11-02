@@ -1,0 +1,52 @@
+x-node: &node
+  image: tavchain-fullnode:1.8.1-tavchain.eval1-771002-docker1
+  platform: linux/amd64
+  pull_policy: never
+  build:
+    context: .
+  user: "10001:10001"
+  environment:
+    HOME: /data
+    TAVCHAIN_MONIKER: ${TAVCHAIN_MONIKER:-my-tavchain-fullnode}
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  volumes:
+    - node-data:/data
+services:
+  init:
+    <<: *node
+    profiles: ["tools"]
+    entrypoint: ["/usr/local/bin/init-node"]
+    command: []
+    restart: "no"
+  node:
+    <<: *node
+    restart: unless-stopped
+    stop_grace_period: 5m
+    ports:
+      - "127.0.0.1:29657:29657"
+      - "127.0.0.1:29645:29645"
+      - "127.0.0.1:29646:29646"
+    command:
+      - start
+      - --home
+      - /data
+      - --moniker
+      - ${TAVCHAIN_MONIKER:-my-tavchain-fullnode}
+      - --genesis_hash
+      - a101ab9ccf1478757af8a69d832548ea1167e552fe6d6ef6621a77447a54e924
+      - --rpc.laddr
+      - tcp://0.0.0.0:29657
+      - --p2p.laddr
+      - tcp://0.0.0.0:29656
+      - --json-rpc.address
+      - 0.0.0.0:29645
+      - --json-rpc.ws-address
+      - 0.0.0.0:29646
+volumes:
+  node-data:

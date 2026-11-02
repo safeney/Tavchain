@@ -1,0 +1,147 @@
+--- a/default.nix
++++ b/default.nix
+@@ -5,33 +5,29 @@
+   go,
+   nix-gitignore,
+   coverage ? false, # https://tip.golang.org/doc/go1.20#cover
+-  rocksdb,
+-  network ? "mainnet", # mainnet|testnet
++  network ? "testnet", # mainnet|testnet
+   rev ? "dirty",
+   static ? stdenv.hostPlatform.isStatic,
+   nativeByteOrder ? true, # nativeByteOrder mode will panic on big endian machines
+ }:
+ let
+-  version = "v1.8.1";
+-  pname = "cronosd";
++  version = "1.8.1-tavchain.eval1-native1";
++  pname = "tavchaind";
+   tags = [
+-    "ledger"
+     "netgo"
+     network
+-    "rocksdb"
+-    "grocksdb_no_link"
+     "pebbledb"
+     "objstore"
+   ]
+   ++ lib.optionals nativeByteOrder [ "nativebyteorder" ];
+   ldflags = lib.concatStringsSep "\n" [
+-    "-X github.com/cosmos/cosmos-sdk/version.Name=cronos"
++    "-X github.com/cosmos/cosmos-sdk/version.Name=tavchain"
+     "-X github.com/cosmos/cosmos-sdk/version.AppName=${pname}"
+     "-X github.com/cosmos/cosmos-sdk/version.Version=${version}"
+     "-X github.com/cosmos/cosmos-sdk/version.BuildTags=${lib.concatStringsSep "," tags}"
+     "-X github.com/cosmos/cosmos-sdk/version.Commit=${rev}"
+   ];
+-  buildInputs = [ rocksdb ];
++  buildInputs = [ ];
+ in
+ buildGoApplication rec {
+   inherit
+@@ -62,25 +58,16 @@
+   subPackages = [ "cmd/cronosd" ];
+   buildFlags = lib.optionalString coverage "-cover";
+   CGO_ENABLED = "1";
+-  CGO_LDFLAGS = lib.optionalString (rocksdb != null) (
+-    if static then
+-      "-lrocksdb -pthread -lstdc++ -ldl -lzstd -lsnappy -llz4 -lbz2 -lz"
+-    else if stdenv.hostPlatform.isWindows then
+-      "-lrocksdb-shared"
+-    else
+-      "-lrocksdb -pthread -lstdc++ -ldl"
+-  );
+-
+-  postFixup = lib.optionalString (stdenv.isDarwin && rocksdb != null) ''
+-    ${stdenv.cc.bintools.targetPrefix}install_name_tool -change "@rpath/librocksdb.${lib.versions.major rocksdb.version}.dylib" "${rocksdb}/lib/librocksdb.dylib" $out/bin/cronosd
++  postInstall = ''
++    mv $out/bin/cronosd${stdenv.hostPlatform.extensions.executable} $out/bin/tavchaind${stdenv.hostPlatform.extensions.executable}
+   '';
+ 
+   doCheck = false;
+   meta = with lib; {
+-    description = "Official implementation of the Cronos blockchain protocol";
+-    homepage = "https://cronos.org/";
++    description = "Tavchain node client";
++    homepage = "https://tavchain.safeney.com/";
+     license = licenses.asl20;
+-    mainProgram = "cronosd" + stdenv.hostPlatform.extensions.executable;
++    mainProgram = "tavchaind" + stdenv.hostPlatform.extensions.executable;
+     platforms = platforms.all;
+   };
+ }
+--- a/flake.nix
++++ b/flake.nix
+@@ -28,7 +28,7 @@
+       poetry2nix,
+     }:
+     let
+-      rev = self.shortRev or "dirty";
++      rev = "616274a74d4f4747e67fad7f895c000e90a3ec6a+patch.c2a86d91e622";
+       gomodOverlay =
+         final: prev:
+         let
+--- a/nix/bundle-win-exe.nix
++++ b/nix/bundle-win-exe.nix
+@@ -2,24 +2,12 @@
+   runCommand,
+   windows,
+   stdenv,
+-  rocksdb,
+-  bzip2,
+-  lz4,
+-  snappy,
+-  zstd,
+-  zlib,
+   cronosd,
+ }:
+ runCommand "tarball-${cronosd.name}"
+   {
+-    # manually enumerate the runtime dependencies of cronosd on mingwW64
++    # Retain the upstream compiler runtime bundle; inspect PE imports before release.
+     deps = [
+-      "${rocksdb}/bin/librocksdb-shared.dll"
+-      "${snappy}/bin/libsnappy.dll"
+-      "${lz4.out}/bin/liblz4.dll"
+-      "${bzip2.bin}/bin/libbz2-1.dll"
+-      "${zlib}/bin/zlib1.dll"
+-      "${zstd.bin}/bin/libzstd.dll"
+       "${windows.mingw_w64_pthreads}/bin/libwinpthread-1.dll"
+       "${windows.mcfgthreads}/bin/libmcfgthread-2.dll"
+       "${stdenv.cc.cc.lib}/x86_64-w64-mingw32/lib/libgcc_s_seh-1.dll"
+--- a/scripts/release.sh
++++ b/scripts/release.sh
+@@ -1,10 +1,10 @@
+ #!/bin/bash
+-set -e
++set -euo pipefail
+ 
+ baseurl="."
+ build_type="tarball"
+ build_platform="$(nix eval --impure --raw --expr 'builtins.currentSystem')"
+-ref_name_clean=$(echo "${GITHUB_REF_NAME:=vdevel}" | sed -e 's/[^A-Za-z0-9._-]/_/g')
++ref_name_clean="1.8.1-tavchain.eval1-native1"
+ 
+ build() {
+     set -e
+@@ -29,7 +29,7 @@
+     fi
+     echo "building $FLAKE"
+     nix build --no-update-lock-file --no-allow-dirty -L "$FLAKE"
+-    cp result "cronos_${ref_name_clean:1}${network}_${name}.tar.gz"
++    cp result "tavchain_${ref_name_clean}${network}_${name}.tar.gz"
+ }
+ 
+ if [[ "$build_platform" == "x86_64-linux" ]]; then
+@@ -47,10 +47,7 @@
+     exit 1
+ fi
+ 
+-networks=("" "-testnet")
+-if [[ "${SKIP_TESTNET:-}" == "1" ]]; then
+-    networks=("")
+-fi
++networks=("-testnet")
+ 
+ for network in "${networks[@]}"; do
+     for t in $hosts; do

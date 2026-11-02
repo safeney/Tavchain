@@ -1,0 +1,9 @@
+**
+!Dockerfile
+!bin/
+!bin/tavchaind
+!network/
+!network/**
+!notices/
+!notices/**
+!init-node.sh

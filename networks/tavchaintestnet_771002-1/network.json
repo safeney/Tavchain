@@ -1,0 +1,26 @@
+{
+  "release": "tavchain-network-771002-1",
+  "status": "PREPARED_NOT_ACTIVE",
+  "native_chain_id": "tavchaintestnet_771002-1",
+  "evm_chain_id": 771002,
+  "evm_chain_id_hex": "0xbc3ba",
+  "native_asset": {
+    "name": "Tavcoin",
+    "symbol": "TAV",
+    "decimals": 18,
+    "base_denom": "atav"
+  },
+  "genesis_sha256": "a101ab9ccf1478757af8a69d832548ea1167e552fe6d6ef6621a77447a54e924",
+  "node_version": "1.8.1-tavchain.eval1",
+  "node_binary_sha256": "fa434051778f277ba03454dde427aa2ec431a93a010b7ded3746edde50bb4991",
+  "persistent_peers": [
+    "63c3e0f56b33ce0b45ebb03806dab3002691a187@77.42.64.182:28656",
+    "2b5612173d3d593a6cb210d436d7817ab9cb44b7@77.42.64.182:28756",
+    "b38fde60012b3fd37da07bdd82dce91428d50e73@77.42.64.182:28856"
+  ],
+  "rpc": "https://api.testnet.tavchain.safeney.com/",
+  "explorer": "https://explorer.tavchain.safeney.com/",
+  "faucet": "https://faucet.tavchain.safeney.com/",
+  "docs": "https://docs.tavchain.safeney.com/",
+  "support": "support@safeney.com"
+}
