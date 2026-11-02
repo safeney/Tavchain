@@ -1,6 +1,6 @@
 name: tavchain-fullnode
 x-node: &node
-  image: ${TAVCHAIN_IMAGE:-ghcr.io/safeney/tavchain-fullnode:1.8.1-tavchain.eval1-771002-docker1}
+  image: ${TAVCHAIN_IMAGE:-ghcr.io/safeney/tavchain-fullnode@sha256:0b7ae286253a9555009c846f4e203e06060ba4a9e8b1b8788fa06445343f396d}
   platform: linux/amd64
   pull_policy: if_not_present
   user: "10001:10001"

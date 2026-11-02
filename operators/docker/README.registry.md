@@ -1,6 +1,6 @@
 # Run a Tavchain node with the published image
 
-Candidate guide: the registry image has not been built, accepted or published yet.
+Tested on GitHub-hosted Ubuntu 24.04 (Linux amd64) with Docker Engine and Compose. This guide uses the public prebuilt image.
 
 For Linux x86-64 with Docker Engine and Compose installed:
 
@@ -26,4 +26,4 @@ docker compose -f compose.registry.yaml up -d node
 
 Keep the same directory/project and volume. Initialize once; ordinary stops preserve data. Do not use `down --volumes` on retained node data. Local RPC ports bind to 127.0.0.1. The image is for a Linux amd64 non-validator; other host/validator configurations are separate.
 
-The final guide will record the accepted registry digest. Set TAVCHAIN_IMAGE to the full image@sha256 digest to pin exact image bytes. The existing archive and local-build Compose file remain available. Registry authentication and its digest record do not claim a new detached release-key signature.
+The default image is pinned to the accepted immutable digest:\n\n`ghcr.io/safeney/tavchain-fullnode@sha256:0b7ae286253a9555009c846f4e203e06060ba4a9e8b1b8788fa06445343f396d`\n\nSet TAVCHAIN_IMAGE only when following an approved release upgrade. The existing archive and local-build Compose file remain available. Registry authentication and its digest record do not claim a new detached release-key signature.
