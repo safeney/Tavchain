@@ -1,0 +1,41 @@
+name: Tavchain full-node container release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tavchain-container-release1
+  cancel-in-progress: false
+jobs:
+  build-test-publish:
+    if: github.repository == 'safeney/Tavchain' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    env:
+      TAVCHAIN_IMAGE: tavchain-registry-candidate:${{ github.sha }}
+      REGISTRY_IMAGE: ghcr.io/safeney/tavchain-fullnode:1.8.1-tavchain.eval1-771002-docker1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify released package
+        run: python3 distribution/container1/prepare.py
+      - name: Validate Compose
+        run: |
+          docker compose -f operators/docker/compose.registry.yaml config --quiet
+          docker compose -f operators/docker/compose.registry.yaml --profile tools config --quiet
+      - name: Build exact released Dockerfile
+        run: |
+          docker build --platform linux/amd64 --label org.opencontainers.image.source=https://github.com/safeney/Tavchain --label org.opencontainers.image.revision="$GITHUB_SHA" --tag "$TAVCHAIN_IMAGE" .container-release/tavchain-docker-771002-1
+          test "$(docker image inspect --format '{{.Config.User}}' "$TAVCHAIN_IMAGE")" = "10001:10001"
+          test "$(docker image inspect --format '{{.Architecture}}' "$TAVCHAIN_IMAGE")" = "amd64"
+          docker run --rm --network none --entrypoint sha256sum "$TAVCHAIN_IMAGE" /usr/local/bin/tavchaind | grep '^fa434051778f277ba03454dde427aa2ec431a93a010b7ded3746edde50bb4991 '
+          docker run --rm --network none "$TAVCHAIN_IMAGE" version --long
+      - name: Accept disposable non-validator
+        run: python3 distribution/container1/accept.py
+      - name: Publish accepted image
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 distribution/container1/publish.py
