@@ -1,0 +1,1 @@
+Tavchain modifications to the8files identified in TAVCHAIN-MODIFICATIONS.md are licensed under Apache2.0, approved EVMSOURCEPOLICY1. Upstream/dependency licenses and notices retained. No old private-binary restriction supersedes upstream terms. Full Apache2.0 text included.

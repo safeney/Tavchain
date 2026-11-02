@@ -1,0 +1,714 @@
+{
+  "app_name": "tavchaind",
+  "app_version": "",
+  "genesis_time": "2026-10-31T20:44:17Z",
+  "chain_id": "tavchaintestnet_771002-1",
+  "initial_height": 1,
+  "app_hash": "",
+  "app_state": {
+    "07-tendermint": null,
+    "auth": {
+      "params": {
+        "max_memo_characters": "256",
+        "tx_sig_limit": "7",
+        "tx_size_cost_per_byte": "10",
+        "sig_verify_cost_ed25519": "590",
+        "sig_verify_cost_secp256k1": "1000"
+      },
+      "accounts": [
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "tav1a44ft0qnyrw0h3x3r2tfuvg4c92760tt8mnrlc",
+          "pub_key": null,
+          "account_number": "0",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "tav18fxle2hmdxgtu3k98reu6d73eda0pv2ayt2aws",
+          "pub_key": null,
+          "account_number": "1",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "tav1tq0452egcxx98uh6dv37phn93pafcy0hhnl9yq",
+          "pub_key": null,
+          "account_number": "2",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "tav1d5vw2p8aczuzevfmehg2a0zhfjxgfymhmk4jn6",
+          "pub_key": null,
+          "account_number": "3",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "tav1fapdjtmd28pc5u7mqpc4x3w3en53uqvztsq99r",
+          "pub_key": null,
+          "account_number": "4",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "tav14574ckng6u5g3cd8dmpwe6rvg0n0nexds3p3jq",
+          "pub_key": null,
+          "account_number": "5",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "tav1as8xxn7k3ex72p7c35lex3la3j552dhtvqgxju",
+          "pub_key": null,
+          "account_number": "6",
+          "sequence": "0"
+        }
+      ]
+    },
+    "bank": {
+      "params": {
+        "send_enabled": [],
+        "default_send_enabled": true
+      },
+      "balances": [
+        {
+          "address": "tav1a44ft0qnyrw0h3x3r2tfuvg4c92760tt8mnrlc",
+          "coins": [
+            {
+              "denom": "atav",
+              "amount": "2000000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "tav18fxle2hmdxgtu3k98reu6d73eda0pv2ayt2aws",
+          "coins": [
+            {
+              "denom": "atav",
+              "amount": "2000000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "tav1tq0452egcxx98uh6dv37phn93pafcy0hhnl9yq",
+          "coins": [
+            {
+              "denom": "atav",
+              "amount": "2000000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "tav1d5vw2p8aczuzevfmehg2a0zhfjxgfymhmk4jn6",
+          "coins": [
+            {
+              "denom": "atav",
+              "amount": "2000000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "tav1fapdjtmd28pc5u7mqpc4x3w3en53uqvztsq99r",
+          "coins": [
+            {
+              "denom": "atav",
+              "amount": "50000000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "tav14574ckng6u5g3cd8dmpwe6rvg0n0nexds3p3jq",
+          "coins": [
+            {
+              "denom": "atav",
+              "amount": "50000000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "tav1as8xxn7k3ex72p7c35lex3la3j552dhtvqgxju",
+          "coins": [
+            {
+              "denom": "atav",
+              "amount": "892000000000000000000000"
+            }
+          ]
+        }
+      ],
+      "supply": [
+        {
+          "denom": "atav",
+          "amount": "1000000000000000000000000"
+        }
+      ],
+      "denom_metadata": [
+        {
+          "description": "Tavcoin is the native asset of Tavchain. Testnet Tavcoin has no monetary value.",
+          "denom_units": [
+            {
+              "denom": "atav",
+              "exponent": 0,
+              "aliases": []
+            },
+            {
+              "denom": "tav",
+              "exponent": 18,
+              "aliases": []
+            }
+          ],
+          "base": "atav",
+          "display": "tav",
+          "name": "Tavcoin",
+          "symbol": "TAV",
+          "uri": "",
+          "uri_hash": ""
+        }
+      ],
+      "send_enabled": [
+        {
+          "denom": "stake",
+          "enabled": false
+        }
+      ]
+    },
+    "consensus": null,
+    "crisis": {
+      "constant_fee": {
+        "denom": "atav",
+        "amount": "1000"
+      }
+    },
+    "cronos": {
+      "params": {
+        "ibc_cro_denom": "ibc/6B5A664BF0AF4F71B2F0BAA33141E2F1321242FBD5D19762F541EC971ACB0865",
+        "ibc_timeout": "86400000000000",
+        "cronos_admin": "",
+        "enable_auto_deployment": false,
+        "max_callback_gas": "50000",
+        "cro_bridge_contract_addresses": []
+      },
+      "external_contracts": [],
+      "auto_contracts": []
+    },
+    "distribution": {
+      "params": {
+        "community_tax": "0.020000000000000000",
+        "base_proposer_reward": "0.000000000000000000",
+        "bonus_proposer_reward": "0.000000000000000000",
+        "withdraw_addr_enabled": true
+      },
+      "fee_pool": {
+        "community_pool": []
+      },
+      "delegator_withdraw_infos": [],
+      "previous_proposer": "",
+      "outstanding_rewards": [],
+      "validator_accumulated_commissions": [],
+      "validator_historical_rewards": [],
+      "validator_current_rewards": [],
+      "delegator_starting_infos": [],
+      "validator_slash_events": []
+    },
+    "e2ee": {
+      "keys": []
+    },
+    "evidence": {
+      "evidence": []
+    },
+    "evm": {
+      "accounts": [],
+      "params": {
+        "evm_denom": "atav",
+        "enable_create": true,
+        "enable_call": true,
+        "extra_eips": [],
+        "chain_config": {
+          "homestead_block": "0",
+          "dao_fork_block": "0",
+          "dao_fork_support": true,
+          "eip150_block": "0",
+          "eip150_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "eip155_block": "0",
+          "eip158_block": "0",
+          "byzantium_block": "0",
+          "constantinople_block": "0",
+          "petersburg_block": "0",
+          "istanbul_block": "0",
+          "muir_glacier_block": "0",
+          "berlin_block": "0",
+          "london_block": "0",
+          "arrow_glacier_block": "0",
+          "gray_glacier_block": "0",
+          "merge_netsplit_block": "0",
+          "shanghai_time": "0",
+          "cancun_time": "0",
+          "prague_time": "0",
+          "osaka_time": "0"
+        },
+        "allow_unprotected_txs": false,
+        "header_hash_num": "256",
+        "history_serve_window": "8191"
+      },
+      "preinstalls": []
+    },
+    "feegrant": {
+      "allowances": []
+    },
+    "feemarket": {
+      "params": {
+        "no_base_fee": false,
+        "base_fee_change_denominator": 8,
+        "elasticity_multiplier": 2,
+        "enable_height": "0",
+        "base_fee": "1000000000",
+        "min_gas_price": "1000000000.000000000000000000",
+        "min_gas_multiplier": "0.500000000000000000"
+      },
+      "block_gas": "0"
+    },
+    "genutil": {
+      "gen_txs": [
+        {
+          "body": {
+            "messages": [
+              {
+                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+                "description": {
+                  "moniker": "tavchain-validator1",
+                  "identity": "",
+                  "website": "",
+                  "security_contact": "",
+                  "details": ""
+                },
+                "commission": {
+                  "rate": "0.100000000000000000",
+                  "max_rate": "0.200000000000000000",
+                  "max_change_rate": "0.010000000000000000"
+                },
+                "min_self_delegation": "1",
+                "delegator_address": "",
+                "validator_address": "tavvaloper1a44ft0qnyrw0h3x3r2tfuvg4c92760ttc4xngw",
+                "pubkey": {
+                  "@type": "/cosmos.crypto.ed25519.PubKey",
+                  "key": "fZ36O/Qk1wwx5xWSuweLudE/uBpTrZxOM9x9venNN3s="
+                },
+                "value": {
+                  "denom": "atav",
+                  "amount": "1000000000000000000000"
+                }
+              }
+            ],
+            "memo": "63c3e0f56b33ce0b45ebb03806dab3002691a187@77.42.64.182:28656",
+            "timeout_height": "0",
+            "unordered": false,
+            "timeout_timestamp": null,
+            "extension_options": [],
+            "non_critical_extension_options": []
+          },
+          "auth_info": {
+            "signer_infos": [
+              {
+                "public_key": {
+                  "@type": "/ethermint.crypto.v1.ethsecp256k1.PubKey",
+                  "key": "AsEHwG7kgjyCDLi82IlDZdZzXb2INnKh8nUZJLOQ+75c"
+                },
+                "mode_info": {
+                  "single": {
+                    "mode": "SIGN_MODE_DIRECT"
+                  }
+                },
+                "sequence": "0"
+              }
+            ],
+            "fee": {
+              "amount": [
+                {
+                  "denom": "atav",
+                  "amount": "200000000000000"
+                }
+              ],
+              "gas_limit": "200000",
+              "payer": "",
+              "granter": ""
+            },
+            "tip": null
+          },
+          "signatures": [
+            "aEz000KaycXfpDqRXgCp/BlxqTOwo3InNSI8HNACSK8E5WMvBEeSfwteOBbJE3/XhBLRqp/oHjYLJgsUyzePxwE="
+          ]
+        },
+        {
+          "body": {
+            "messages": [
+              {
+                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+                "description": {
+                  "moniker": "tavchain-validator2",
+                  "identity": "",
+                  "website": "",
+                  "security_contact": "",
+                  "details": ""
+                },
+                "commission": {
+                  "rate": "0.100000000000000000",
+                  "max_rate": "0.200000000000000000",
+                  "max_change_rate": "0.010000000000000000"
+                },
+                "min_self_delegation": "1",
+                "delegator_address": "",
+                "validator_address": "tavvaloper18fxle2hmdxgtu3k98reu6d73eda0pv2am9ldex",
+                "pubkey": {
+                  "@type": "/cosmos.crypto.ed25519.PubKey",
+                  "key": "hF0Ohbhzog7hSmK6AnPTC3O91XnhVkDUaQwWr/zC8gg="
+                },
+                "value": {
+                  "denom": "atav",
+                  "amount": "1000000000000000000000"
+                }
+              }
+            ],
+            "memo": "2b5612173d3d593a6cb210d436d7817ab9cb44b7@77.42.64.182:28756",
+            "timeout_height": "0",
+            "unordered": false,
+            "timeout_timestamp": null,
+            "extension_options": [],
+            "non_critical_extension_options": []
+          },
+          "auth_info": {
+            "signer_infos": [
+              {
+                "public_key": {
+                  "@type": "/ethermint.crypto.v1.ethsecp256k1.PubKey",
+                  "key": "A1t1jo4ajJDkXvsxlgTZOfOTp+vwNYBIddBaKdZ7mVc8"
+                },
+                "mode_info": {
+                  "single": {
+                    "mode": "SIGN_MODE_DIRECT"
+                  }
+                },
+                "sequence": "0"
+              }
+            ],
+            "fee": {
+              "amount": [
+                {
+                  "denom": "atav",
+                  "amount": "200000000000000"
+                }
+              ],
+              "gas_limit": "200000",
+              "payer": "",
+              "granter": ""
+            },
+            "tip": null
+          },
+          "signatures": [
+            "aFt3PVUwxXphh88x7SBpGt5R5DyR+E/wbbU2i4szbEZ9GWJ5CmhgkJrx6X1Nt01+doDnvI/jUUs0mmce90D1vwA="
+          ]
+        },
+        {
+          "body": {
+            "messages": [
+              {
+                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+                "description": {
+                  "moniker": "tavchain-validator3",
+                  "identity": "",
+                  "website": "",
+                  "security_contact": "",
+                  "details": ""
+                },
+                "commission": {
+                  "rate": "0.100000000000000000",
+                  "max_rate": "0.200000000000000000",
+                  "max_change_rate": "0.010000000000000000"
+                },
+                "min_self_delegation": "1",
+                "delegator_address": "",
+                "validator_address": "tavvaloper1tq0452egcxx98uh6dv37phn93pafcy0hga24nk",
+                "pubkey": {
+                  "@type": "/cosmos.crypto.ed25519.PubKey",
+                  "key": "T4PBg8DaBzmsHSshQJ5YywjqNIhhuBQcsKvr1C8bPm0="
+                },
+                "value": {
+                  "denom": "atav",
+                  "amount": "1000000000000000000000"
+                }
+              }
+            ],
+            "memo": "b38fde60012b3fd37da07bdd82dce91428d50e73@77.42.64.182:28856",
+            "timeout_height": "0",
+            "unordered": false,
+            "timeout_timestamp": null,
+            "extension_options": [],
+            "non_critical_extension_options": []
+          },
+          "auth_info": {
+            "signer_infos": [
+              {
+                "public_key": {
+                  "@type": "/ethermint.crypto.v1.ethsecp256k1.PubKey",
+                  "key": "A+wQzX3y1IVtAP7pZeTih5yc9TfmotC8cY3JymlftasS"
+                },
+                "mode_info": {
+                  "single": {
+                    "mode": "SIGN_MODE_DIRECT"
+                  }
+                },
+                "sequence": "0"
+              }
+            ],
+            "fee": {
+              "amount": [
+                {
+                  "denom": "atav",
+                  "amount": "200000000000000"
+                }
+              ],
+              "gas_limit": "200000",
+              "payer": "",
+              "granter": ""
+            },
+            "tip": null
+          },
+          "signatures": [
+            "F3C/DtEmpnUY+PPKb8ahRwB8lawy6SvAvjtlMUffX+IFZJtKYex6KqrTz0Yn8xteYOkOBEV3TMT4aUUlIL0KNAE="
+          ]
+        },
+        {
+          "body": {
+            "messages": [
+              {
+                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+                "description": {
+                  "moniker": "tavchain-validator4",
+                  "identity": "",
+                  "website": "",
+                  "security_contact": "",
+                  "details": ""
+                },
+                "commission": {
+                  "rate": "0.100000000000000000",
+                  "max_rate": "0.200000000000000000",
+                  "max_change_rate": "0.010000000000000000"
+                },
+                "min_self_delegation": "1",
+                "delegator_address": "",
+                "validator_address": "tavvaloper1d5vw2p8aczuzevfmehg2a0zhfjxgfymhycqzyv",
+                "pubkey": {
+                  "@type": "/cosmos.crypto.ed25519.PubKey",
+                  "key": "yKBTLDFTjLZ9cvbAyTI9HrnPz+Xfqp48PQ/2uVCkxwc="
+                },
+                "value": {
+                  "denom": "atav",
+                  "amount": "1000000000000000000000"
+                }
+              }
+            ],
+            "memo": "ec38ed5487ff5953989489d7542839c1a253dc66@127.0.0.1:28656",
+            "timeout_height": "0",
+            "unordered": false,
+            "timeout_timestamp": null,
+            "extension_options": [],
+            "non_critical_extension_options": []
+          },
+          "auth_info": {
+            "signer_infos": [
+              {
+                "public_key": {
+                  "@type": "/ethermint.crypto.v1.ethsecp256k1.PubKey",
+                  "key": "ApLehCh/andZIK8DVucCMVzr+eVqFbpw6XbO5TQUP1pI"
+                },
+                "mode_info": {
+                  "single": {
+                    "mode": "SIGN_MODE_DIRECT"
+                  }
+                },
+                "sequence": "0"
+              }
+            ],
+            "fee": {
+              "amount": [
+                {
+                  "denom": "atav",
+                  "amount": "200000000000000"
+                }
+              ],
+              "gas_limit": "200000",
+              "payer": "",
+              "granter": ""
+            },
+            "tip": null
+          },
+          "signatures": [
+            "yhmMzrKIShq3QmxSyy+zGjtlIcpFaxGh7AeG3VWFURAua75en3oIaPiRkz9tZnS5YK8vqgPlmvACDcgKpjEwhAA="
+          ]
+        }
+      ]
+    },
+    "gov": {
+      "starting_proposal_id": "1",
+      "deposits": [],
+      "votes": [],
+      "proposals": [],
+      "deposit_params": null,
+      "voting_params": null,
+      "tally_params": null,
+      "params": {
+        "min_deposit": [
+          {
+            "denom": "atav",
+            "amount": "100000000000000000000"
+          }
+        ],
+        "max_deposit_period": "172800s",
+        "voting_period": "86400s",
+        "quorum": "0.334000000000000000",
+        "threshold": "0.500000000000000000",
+        "veto_threshold": "0.334000000000000000",
+        "min_initial_deposit_ratio": "0.000000000000000000",
+        "proposal_cancel_ratio": "0.500000000000000000",
+        "proposal_cancel_dest": "",
+        "expedited_voting_period": "21600s",
+        "expedited_threshold": "0.800000000000000000",
+        "expedited_min_deposit": [
+          {
+            "denom": "atav",
+            "amount": "500000000000000000000"
+          }
+        ],
+        "burn_vote_quorum": false,
+        "burn_proposal_deposit_prevote": false,
+        "burn_vote_veto": true,
+        "min_deposit_ratio": "0.010000000000000000"
+      },
+      "constitution": ""
+    },
+    "ibc": {
+      "client_genesis": {
+        "clients": [],
+        "clients_consensus": [],
+        "clients_metadata": [],
+        "params": {
+          "allowed_clients": [
+            "*"
+          ]
+        },
+        "create_localhost": false,
+        "next_client_sequence": "0"
+      },
+      "connection_genesis": {
+        "connections": [],
+        "client_connection_paths": [],
+        "next_connection_sequence": "0",
+        "params": {
+          "max_expected_time_per_block": "30000000000"
+        }
+      },
+      "channel_genesis": {
+        "channels": [],
+        "acknowledgements": [],
+        "commitments": [],
+        "receipts": [],
+        "send_sequences": [],
+        "recv_sequences": [],
+        "ack_sequences": [],
+        "next_channel_sequence": "0"
+      },
+      "client_v2_genesis": {
+        "counterparty_infos": []
+      },
+      "channel_v2_genesis": {
+        "acknowledgements": [],
+        "commitments": [],
+        "receipts": [],
+        "async_packets": [],
+        "send_sequences": []
+      }
+    },
+    "mint": {
+      "minter": {
+        "inflation": "0.000000000000000000",
+        "annual_provisions": "0.000000000000000000"
+      },
+      "params": {
+        "mint_denom": "atav",
+        "inflation_rate_change": "0.000000000000000000",
+        "inflation_max": "0.000000000000000000",
+        "inflation_min": "0.000000000000000000",
+        "goal_bonded": "0.670000000000000000",
+        "blocks_per_year": "6311520",
+        "max_supply": "1000000000000000000000000"
+      }
+    },
+    "params": null,
+    "slashing": {
+      "params": {
+        "signed_blocks_window": "10000",
+        "min_signed_per_window": "0.050000000000000000",
+        "downtime_jail_duration": "600s",
+        "slash_fraction_double_sign": "0.050000000000000000",
+        "slash_fraction_downtime": "0.000100000000000000"
+      },
+      "signing_infos": [],
+      "missed_blocks": []
+    },
+    "staking": {
+      "params": {
+        "unbonding_time": "1814400s",
+        "max_validators": 10,
+        "max_entries": 7,
+        "historical_entries": 10000,
+        "bond_denom": "atav",
+        "min_commission_rate": "0.000000000000000000"
+      },
+      "last_total_power": "0",
+      "last_validator_powers": [],
+      "validators": [],
+      "delegations": [],
+      "unbonding_delegations": [],
+      "redelegations": [],
+      "exported": false
+    },
+    "transfer": {
+      "port_id": "transfer",
+      "denoms": [],
+      "params": {
+        "send_enabled": false,
+        "receive_enabled": false
+      },
+      "total_escrowed": []
+    },
+    "upgrade": {},
+    "vesting": {}
+  },
+  "consensus": {
+    "params": {
+      "block": {
+        "max_bytes": "1048576",
+        "max_gas": "10000000"
+      },
+      "evidence": {
+        "max_age_num_blocks": "100000",
+        "max_age_duration": "172800000000000",
+        "max_bytes": "1048576"
+      },
+      "validator": {
+        "pub_key_types": [
+          "ed25519"
+        ]
+      },
+      "version": {
+        "app": "0"
+      },
+      "abci": {
+        "vote_extensions_enable_height": "0"
+      },
+      "authority": {
+        "authority": ""
+      }
+    }
+  }
+}
