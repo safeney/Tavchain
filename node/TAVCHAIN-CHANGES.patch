@@ -1,0 +1,153 @@
+diff --git a/Makefile b/Makefile
+index f82ab58..a948360 100644
+--- a/Makefile
++++ b/Makefile
+@@ -90,8 +90,8 @@ comma := ,
+ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
+ 
+ # process linker flags
+-ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=cronos \
+-	-X github.com/cosmos/cosmos-sdk/version.AppName=cronosd \
++ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=tavchain \
++	-X github.com/cosmos/cosmos-sdk/version.AppName=tavchaind \
+ 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
+ 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
+ 	-X github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)
+@@ -104,10 +104,11 @@ endif
+ 
+ all: build
+ build: check-network print-ledger go.sum
+-	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/cronosd ./cmd/cronosd
++	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/tavchaind ./cmd/cronosd
+ 
+ install: check-network print-ledger go.sum
+-	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/cronosd
++	@mkdir -p $(BINDIR)
++	@go build -mod=readonly $(BUILD_FLAGS) -o $(BINDIR)/tavchaind ./cmd/cronosd
+ 
+ test:
+ 	@go test -tags=objstore -v -mod=readonly $(PACKAGES) -coverprofile=$(COVERAGE) -covermode=atomic
+diff --git a/app/app.go b/app/app.go
+index 24f20ca..2310641 100644
+--- a/app/app.go
++++ b/app/app.go
+@@ -157,7 +157,7 @@ import (
+ )
+ 
+ const (
+-	Name = "cronos"
++	Name = "tavchain"
+ 
+ 	// AddrLen is the allowed length (in bytes) for an address.
+ 	//
+diff --git a/cmd/cronosd/cmd/root.go b/cmd/cronosd/cmd/root.go
+index a22c658..6358d4b 100644
+--- a/cmd/cronosd/cmd/root.go
++++ b/cmd/cronosd/cmd/root.go
+@@ -49,7 +49,7 @@ import (
+ 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+ )
+ 
+-const EnvPrefix = "CRONOS"
++const EnvPrefix = "TAVCHAIND"
+ 
+ var ChainID string
+ 
+@@ -86,7 +86,7 @@ func NewRootCmd() *cobra.Command {
+ 
+ 	rootCmd := &cobra.Command{
+ 		Use:   app.Name + "d",
+-		Short: "Cronos Daemon",
++		Short: "Tavchain Daemon",
+ 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
+ 			// set the default command outputs
+ 			cmd.SetOut(cmd.OutOrStdout())
+diff --git a/cmd/cronosd/config/prefix_mainnet.go b/cmd/cronosd/config/prefix_mainnet.go
+index 730db49..fda5c23 100644
+--- a/cmd/cronosd/config/prefix_mainnet.go
++++ b/cmd/cronosd/config/prefix_mainnet.go
+@@ -5,8 +5,8 @@ package config
+ import sdk "github.com/cosmos/cosmos-sdk/types"
+ 
+ const (
+-	// Bech32Prefix defines the Bech32 prefix used for Cronos Accounts
+-	Bech32Prefix = "crc"
++	// Bech32Prefix defines the Bech32 prefix used for Tavchain Accounts
++	Bech32Prefix = "tav"
+ 
+ 	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address
+ 	Bech32PrefixAccAddr = Bech32Prefix
+diff --git a/cmd/cronosd/config/prefix_testnet.go b/cmd/cronosd/config/prefix_testnet.go
+index b3d40f6..64cec8f 100644
+--- a/cmd/cronosd/config/prefix_testnet.go
++++ b/cmd/cronosd/config/prefix_testnet.go
+@@ -5,8 +5,8 @@ package config
+ import sdk "github.com/cosmos/cosmos-sdk/types"
+ 
+ const (
+-	// Bech32Prefix defines the Bech32 prefix used for Cronos Accounts
+-	Bech32Prefix = "tcrc"
++	// Bech32Prefix defines the Bech32 prefix used for Tavchain Accounts
++	Bech32Prefix = "tav"
+ 
+ 	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address
+ 	Bech32PrefixAccAddr = Bech32Prefix
+diff --git a/cmd/cronosd/main.go b/cmd/cronosd/main.go
+index ef17517..f9a24ae 100644
+--- a/cmd/cronosd/main.go
++++ b/cmd/cronosd/main.go
+@@ -19,7 +19,7 @@ func init() {
+ 	// export COSMOS_SDK_CONFIG_SCOPE before launch to override. The LookupEnv
+ 	// guard only avoids overwriting an existing value.
+ 	if _, ok := os.LookupEnv(sdk.EnvConfigScope); !ok {
+-		_ = os.Setenv(sdk.EnvConfigScope, "cronos")
++		_ = os.Setenv(sdk.EnvConfigScope, "tavchain")
+ 	}
+ }
+ 
+diff --git a/networks/README.md b/networks/README.md
+new file mode 100644
+index 0000000..783a591
+--- /dev/null
++++ b/networks/README.md
+@@ -0,0 +1,15 @@
++# Tavchain network configuration
++
++This candidate builds on Cronos v1.8.1. It is not a deployed network.
++
++`native-asset-metadata.json` is one Cosmos SDK bank Metadata object: Tavcoin/TAV, base denomination `atav`, display denomination `tav`, exponent18. One TAV equals1000000000000000000atav. Include the object in the fresh genesis bank denom_metadata array and select atav for the EVM native denomination when assembling the reviewed genesis. This file is not a complete genesis or an economic allocation.
++
++The CLI is tavchaind, the default node home is .tavchain, environment prefix TAVCHAIND (matching the SDK server executable-name convention), and Cosmos Bech32 account prefix tav. Validator/operator and consensus suffixes follow the SDK defaults. Ethereum-facing accounts retain standard0x20-byte addresses and Ethereum HD coin type60. Address prefixes do not distinguish networks: the Cosmos chain ID and numeric EVM chain ID must do so.
++
++No chain ID is hard-coded into this candidate. Select distinct fresh testnet/mainnet identifiers through the existing upstream genesis/CLI chain-id mechanism; do not reuse Cronos IDs or the historical Tavchain genesis. No public registry allocation is claimed. Testnet uses the same Tavcoin/TAV precision with valueless-token labeling, as other EVM chains distinguish environments through network names and IDs.
++
++The upstream cmd/cronosd source path and Go module/import paths remain unchanged to keep the patch small and upstream updates traceable. make build and make install produce tavchaind. Existing upstream scripts, fixtures, module/store names, Cronos-specific RPC namespaces and configuration sections retain upstream names; those are not rewritten as part of this branding change and are not a ready Tavchain operator recipe. In particular, scripts/cronos-devnet.yaml is an upstream fixture with unreviewed economic and administrative settings, not the Tavchain network configuration.
++
++The metadata object sets no supply, balances, staking participation, inflation, governance deposits, gas-price floor, faucet amounts or validator permissions. Those belong in the explicit reviewed fresh-network profile. The first-public-testnet staking/reward deferral remains in force. Historical six-decimal Tavchain state must not be imported or reinterpreted as this fresh18-decimal network.
++
++References: upstream Makefile/root.go/config prefix files at616274a74d4f4747e67fad7f895c000e90a3ec6a; Celo https://docs.celo.org/build/tools/wallets/metamask/setup and https://docs.celo.org/learn/network/overview ; Base https://docs.base.org/get-started/connect-to-base .
+diff --git a/networks/native-asset-metadata.json b/networks/native-asset-metadata.json
+new file mode 100644
+index 0000000..004cda1
+--- /dev/null
++++ b/networks/native-asset-metadata.json
+@@ -0,0 +1,19 @@
++{
++  "description": "Tavcoin is the native asset of Tavchain. Testnet Tavcoin has no monetary value.",
++  "denom_units": [
++    {
++      "denom": "atav",
++      "exponent": 0,
++      "aliases": []
++    },
++    {
++      "denom": "tav",
++      "exponent": 18,
++      "aliases": []
++    }
++  ],
++  "base": "atav",
++  "display": "tav",
++  "name": "Tavcoin",
++  "symbol": "TAV"
++}

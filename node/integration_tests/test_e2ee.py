@@ -1,0 +1,311 @@
+import json
+from pathlib import Path
+
+import pytest
+from eth_utils import to_checksum_address
+from hexbytes import HexBytes
+from pystarport import ports
+
+from .network import Cronos, setup_custom_cronos
+from .utils import (
+    ADDRS,
+    KEYS,
+    bech32_to_eth,
+    derive_new_account,
+    eth_to_bech32,
+    fund_acc,
+    get_account_nonce,
+    send_transaction,
+    sign_transaction,
+    wait_for_new_blocks,
+    wait_for_port,
+)
+
+
+@pytest.fixture(scope="module")
+def cronos(tmp_path_factory):
+    # Shadow conftest's session `cronos` with a FLOOD network: these tests read
+    # the eth "pending" filter (CometBFT UnconfirmedTxs), which is empty under
+    # the default mempool.type=app. Port 27100 is free.
+    path = tmp_path_factory.mktemp("e2ee")
+    yield from setup_custom_cronos(
+        path, 27100, Path(__file__).parent / "configs/enable-indexer-flood.jsonnet"
+    )
+
+
+def test_register(cronos: Cronos):
+    cli = cronos.cosmos_cli()
+    pubkey0 = cli.e2ee_keygen(keyring_name="key0")
+    with pytest.raises(AssertionError) as exc:
+        cli.register_e2ee_key(pubkey0 + "malformed", _from="validator")
+    assert "malformed recipient" in str(exc.value)
+    assert not cli.query_e2ee_key(cli.address("validator"))
+
+
+def gen_validator_identity(cronos: Cronos):
+    for i in range(len(cronos.config["validators"])):
+        cli = cronos.cosmos_cli(i)
+        if cli.query_e2ee_key(cli.address("validator")):
+            return
+        pubkey = cli.e2ee_keygen()
+        assert cli.e2ee_pubkey() == pubkey
+        cli.register_e2ee_key(pubkey, _from="validator")
+        assert cli.query_e2ee_key(cli.address("validator")) == pubkey
+
+        cronos.supervisorctl("restart", f"cronos_777-1-node{i}")
+
+    wait_for_new_blocks(cronos.cosmos_cli(), 1)
+
+
+def test_encrypt_decrypt(cronos):
+    gen_validator_identity(cronos)
+
+    cli0 = cronos.cosmos_cli()
+    cli1 = cronos.cosmos_cli(1)
+
+    # query in batch
+    assert (
+        len(
+            cli0.query_e2ee_keys(
+                cli0.address("validator"),
+                cli1.address("validator"),
+            )
+        )
+        == 2
+    )
+
+    # prepare data file to encrypt
+    content = "Hello World!"
+    plainfile = cli0.data_dir / "plaintext"
+    plainfile.write_text(content)
+    cipherfile = cli0.data_dir / "ciphertext"
+    cli0.e2ee_encrypt(
+        plainfile,
+        cli0.address("validator"),
+        cli1.address("validator"),
+        output=cipherfile,
+    )
+
+    assert cli0.e2ee_decrypt(cipherfile) == content
+    assert cli1.e2ee_decrypt(cipherfile) == content
+
+
+def encrypt_to_validators(cli, content):
+    blocklist = json.dumps(content)
+    plainfile = cli.data_dir / "plaintext"
+    plainfile.write_text(blocklist)
+    cipherfile = cli.data_dir / "ciphertext"
+    cli.e2ee_encrypt_to_validators(plainfile, output=cipherfile)
+    rsp = cli.store_blocklist(cipherfile, _from="validator")
+    assert rsp["code"] == 0, rsp["raw_log"]
+
+
+def get_nonce(cli, user):
+    acc = cli.query_account(user)["account"]["value"]
+    return int(acc.get("sequence", 0))
+
+
+def test_block_list(cronos):
+    gen_validator_identity(cronos)
+    cli = cronos.cosmos_cli()
+    user = cli.address("signer2")
+    # set blocklist
+    encrypt_to_validators(cli, {"addresses": [user]})
+
+    # normal tx works
+    cli.transfer(cli.address("validator"), user, "1basetcro")
+
+    # blocked tx can be included into mempool
+    rsp = cli.transfer(
+        user, cli.address("validator"), "1basetcro", event_query_tx=False
+    )
+    assert rsp["code"] == 0, rsp["raw_log"]
+
+    # but won't be included into block
+    txhash = rsp["txhash"]
+    with pytest.raises(AssertionError) as exc:
+        cli.event_query_tx_for(txhash)
+    assert "timed out waiting" in str(exc.value)
+    nonce = get_nonce(cli, user)
+
+    # clear blocklist
+    encrypt_to_validators(cli, {})
+
+    # the blocked tx should be unblocked now
+    wait_for_new_blocks(cli, 1)
+    assert nonce + 1 == get_nonce(cli, user)
+
+
+def test_block_list_evm(cronos):
+    gen_validator_identity(cronos)
+    cli = cronos.cosmos_cli()
+    user = cli.address("signer2")
+    # set blocklist
+    encrypt_to_validators(cli, {"addresses": [user]})
+    tx = {
+        "from": to_checksum_address(bech32_to_eth(user)),
+        "to": ADDRS["community"],
+        "value": 1,
+    }
+    base_port = cronos.base_port(0)
+    wait_for_port(ports.evmrpc_ws_port(base_port))
+    w3 = cronos.w3
+    flt = w3.eth.filter("pending")
+    assert flt.get_new_entries() == []
+
+    txhash = w3.eth.send_transaction(tx).hex()
+    nonce = get_nonce(cli, user)
+    # check tx in mempool
+    assert HexBytes(txhash) in w3.eth.get_filter_changes(flt.filter_id)
+
+    # clear blocklist
+    encrypt_to_validators(cli, {})
+
+    # the blocked tx should be unblocked now
+    wait_for_new_blocks(cli, 1)
+    assert nonce + 1 == get_nonce(cli, user)
+    assert w3.eth.get_filter_changes(flt.filter_id) == []
+
+
+def test_invalid_block_list(cronos):
+    cli = cronos.cosmos_cli()
+    cipherfile = cli.data_dir / "ciphertext"
+    cipherfile.write_text("{}")
+    with pytest.raises(AssertionError) as exc:
+        cli.store_blocklist(cipherfile, _from="validator")
+    assert "failed to read header" in str(exc.value)
+
+
+def test_block_list_eip7702(cronos):
+    gen_validator_identity(cronos)
+    cli = cronos.cosmos_cli()
+    w3 = cronos.w3
+    # create new account
+    acc = derive_new_account(n=12)
+    fund_acc(w3, acc)
+    acc_nonce = w3.eth.get_transaction_count(acc.address)
+    # set blocklist
+    encrypt_to_validators(cli, {"addresses": [eth_to_bech32(acc.address)]})
+
+    target_address = "0x4Cd241E8d1510e30b2076397afc7508Ae59C66c9"
+
+    sender = cli.address("signer2")
+    auth = {
+        "chainId": w3.eth.chain_id,
+        "address": target_address,
+        "nonce": acc_nonce,
+    }
+    signed_auth = acc.sign_authorization(auth)
+    tx = {
+        "chainId": w3.eth.chain_id,
+        "type": 4,
+        "to": acc.address,
+        "gas": 50000,
+        "maxFeePerGas": 10000000000000,
+        "maxPriorityFeePerGas": 10000,
+        "authorizationList": [signed_auth],
+        "data": b"",
+        "from": to_checksum_address(bech32_to_eth(sender)),
+    }
+
+    base_port = cronos.base_port(0)
+    wait_for_port(ports.evmrpc_ws_port(base_port))
+    flt = w3.eth.filter("pending")
+    assert flt.get_new_entries() == []
+
+    txhash = w3.eth.send_transaction(tx).hex()
+    nonce = get_nonce(cli, sender)
+    # check tx in mempool
+    assert HexBytes(txhash) in w3.eth.get_filter_changes(flt.filter_id)
+
+    # but won't be included into block
+    wait_for_new_blocks(cli, 2)
+    assert nonce == get_nonce(cli, sender)
+
+    # clear blocklist
+    encrypt_to_validators(cli, {})
+
+    # the blocked tx should be unblocked now
+    wait_for_new_blocks(cli, 1)
+    assert nonce + 1 == get_nonce(cli, sender)
+    assert w3.eth.get_filter_changes(flt.filter_id) == []
+
+
+def test_block_list_contract(cronos):
+    gen_validator_identity(cronos)
+    cli = cronos.cosmos_cli()
+    user = cli.address("signer2")
+    blocked_destination = cli.address("signer1")
+    # set blocklist
+    encrypt_to_validators(cli, {"addresses": [blocked_destination]})
+    tx = {
+        "from": to_checksum_address(bech32_to_eth(user)),
+        "to": to_checksum_address(bech32_to_eth(blocked_destination)),
+        "value": 1,
+    }
+    base_port = cronos.base_port(0)
+    wait_for_port(ports.evmrpc_ws_port(base_port))
+    w3 = cronos.w3
+    flt = w3.eth.filter("pending")
+    assert flt.get_new_entries() == []
+
+    txhash = w3.eth.send_transaction(tx).hex()
+    nonce = get_nonce(cli, user)
+    # check tx in mempool
+    assert HexBytes(txhash) in w3.eth.get_filter_changes(flt.filter_id)
+
+    # clear blocklist
+    encrypt_to_validators(cli, {})
+
+    # the blocked tx should be unblocked now
+    wait_for_new_blocks(cli, 1)
+    assert nonce + 1 == get_nonce(cli, user)
+    assert w3.eth.get_filter_changes(flt.filter_id) == []
+
+
+def test_block_list_unblockable(cronos):
+    """Addresses in the hardcoded unblockable list (app/unblockable.go) are
+    filtered out of any submitted blocklist, so they can never be blocked."""
+    gen_validator_identity(cronos)
+    cli = cronos.cosmos_cli()
+    w3 = cronos.w3
+
+    # one of the hardcoded unblockable addresses; eth_to_bech32 is how it would
+    # be expressed when submitted in a blocklist
+    unblockable_eth = to_checksum_address("0x007F588ca3FFe53F20cb03553Ca38bb13542FF89")
+    unblockable = eth_to_bech32(unblockable_eth)
+
+    # control: a normal address that must stay blocked as a destination
+    control = cli.address("signer1")
+
+    # block both the control and the unblockable address at the same time
+    encrypt_to_validators(cli, {"addresses": [control, unblockable]})
+
+    base_port = cronos.base_port(0)
+    wait_for_port(ports.evmrpc_ws_port(base_port))
+
+    # 1) a tx whose destination is the control address must be filtered out of
+    #    blocks: send it without waiting for a receipt, then confirm below that
+    #    the sender's nonce does not advance while the blocklist is active.
+    blocked_nonce = get_account_nonce(w3, KEYS["community"])
+    signed = sign_transaction(
+        w3,
+        {"to": to_checksum_address(bech32_to_eth(control)), "value": 1},
+        KEYS["community"],
+    )
+    w3.eth.send_raw_transaction(signed.raw_transaction)
+
+    # 2) a tx whose destination is the unblockable address IS included, even
+    #    though that address is present in the submitted blocklist -> it was
+    #    filtered out, and the filtering is selective (the control stays blocked).
+    receipt = send_transaction(w3, {"to": unblockable_eth, "value": 1}, KEYS["signer2"])
+    assert receipt.status == 1
+
+    # the control tx is still stuck: its sender nonce has not advanced
+    wait_for_new_blocks(cli, 1)
+    assert get_account_nonce(w3, KEYS["community"]) == blocked_nonce
+
+    # clearing the blocklist lets the previously blocked tx through
+    encrypt_to_validators(cli, {})
+    wait_for_new_blocks(cli, 2)
+    assert get_account_nonce(w3, KEYS["community"]) == blocked_nonce + 1

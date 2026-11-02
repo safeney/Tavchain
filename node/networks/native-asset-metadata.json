@@ -1,0 +1,19 @@
+{
+  "description": "Tavcoin is the native asset of Tavchain. Testnet Tavcoin has no monetary value. Tavchain modifications (2026): executable identity, address prefixes and network/asset metadata. These modifications are licensed under the Apache License, Version 2.0. Existing upstream notices and third-party licenses are retained. See TAVCHAIN-MODIFICATIONS.md and licenses/Apache-2.0.txt.",
+  "denom_units": [
+    {
+      "denom": "atav",
+      "exponent": 0,
+      "aliases": []
+    },
+    {
+      "denom": "tav",
+      "exponent": 18,
+      "aliases": []
+    }
+  ],
+  "base": "atav",
+  "display": "tav",
+  "name": "Tavcoin",
+  "symbol": "TAV"
+}
