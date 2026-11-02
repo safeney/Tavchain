@@ -34,7 +34,9 @@ Use the versioned GitHub releases:
 
 These assets mirror the existing published downloads without changing their bytes or signatures. Authenticate the applicable signed manifest using the release-key fingerprint in the [installation guides](https://docs.tavchain.safeney.com/tavchain/operate). The original testnet download URLs remain available. GitHub's automatic source ZIP is not a compiled executable.
 
-Browse the complete [Hardhat starter source](examples/hardhat), [Docker packaging source](operators/docker) and [native packaging references](distribution/native1). The Docker source directory omits the large executable; use its complete release archive to run it. A public prebuilt container image is not included in this publication.
+For a new Linux x86-64 node, use the [prebuilt image](https://github.com/safeney/Tavchain/pkgs/container/tavchain-fullnode) and [short Compose setup](operators/docker/README.registry.md). The image includes the client and current network configuration; no local image build or separate genesis download is required. The Compose file pins the accepted image by digest.
+
+Browse the complete [Hardhat starter source](examples/hardhat), [Docker packaging source](operators/docker) and [native packaging references](distribution/native1). The original Docker archive and local-build configuration remain available.
 
 Full-node testing does not establish validator-signing support for the native1 platforms. macOS and Windows ARM64 downloads are not available. No running validator is upgraded by this repository update.
 
