@@ -1,6 +1,6 @@
 # Tavchain
 
-Tavchain is an experimental, Cronos-derived EVM blockchain. Tavchain Testnet uses native Cosmos SDK staking and CometBFT consensus. Test TAV has no monetary value.
+Tavchain is a Cronos-derived EVM blockchain. Tavchain Testnet uses native Cosmos SDK staking and CometBFT consensus. Test TAV has no monetary value.
 
 ## Current network
 
@@ -23,7 +23,7 @@ Tavchain is an experimental, Cronos-derived EVM blockchain. Tavchain Testnet use
 - [Service status](https://status.tavchain.safeney.com/status/tavchain)
 - Support: support@safeney.com
 
-The initial four validators remain under shared administration. The testnet is experimental and unaudited; registration, active validator membership and independently controlled operation are different milestones.
+The initial four validators remain under shared administration. The testnet is unaudited; registration, active validator membership and independently controlled operation are different milestones.
 
 ## Downloads
 
