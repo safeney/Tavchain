@@ -1,6 +1,10 @@
 # Tavchain
 
-Tavchain is a Cronos-derived EVM blockchain. Tavchain Testnet uses native Cosmos SDK staking and CometBFT consensus. Test TAV has no monetary value.
+Tavchain is a general-purpose, EVM-compatible Layer 1 for smart contracts and applications, shaped by Africa's needs and open to developers worldwide.
+
+Use Solidity and familiar Ethereum tools to build applications across payments, finance and DeFi, digital assets, games and verifiable records. These are developer application categories, not a claim that Tavchain operates each service.
+
+The node derives from Cronos and uses Cosmos SDK staking and CometBFT consensus. The current public network is Tavchain Testnet. Test TAV has no monetary value.
 
 ## Current network
 
