@@ -1,6 +1,6 @@
 # Security
 
-Tavchain Testnet is experimental and unaudited. Test TAV has no monetary value.
+Tavchain Testnet has not undergone an independent security audit. Test TAV has no monetary value.
 
 Report suspected vulnerabilities privately to support@safeney.com. Include the affected version, impact and reproduction steps. Do not include private keys, passwords or personal data. Do not post an unpatched exploit in a public issue.
 
