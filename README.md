@@ -28,7 +28,8 @@ The initial four validators remain under shared administration. The testnet is e
 ## Downloads
 
 Use the versioned GitHub releases:
-- [Native full-node clients](https://github.com/safeney/Tavchain/releases/tag/native-1.8.1-tavchain.eval1-native1): Linux x86-64, Linux ARM64 and Windows x86-64, with exact source and runtime notices.
+- [Ready-to-run native bundles](https://github.com/safeney/Tavchain/releases/tag/native-bundle-771002-1): Linux x86-64, Linux ARM64 and Windows x86-64, with the client, runtime libraries and current network files included. Start with the [native guide](https://docs.tavchain.safeney.com/tavchain/operate/node-native).
+- [Earlier native client archives](https://github.com/safeney/Tavchain/releases/tag/native-1.8.1-tavchain.eval1-native1): Linux x86-64, Linux ARM64 and Windows x86-64, with exact source and runtime notices.
 - [Current network and Hardhat starter](https://github.com/safeney/Tavchain/releases/tag/network-771002-1): authenticated configuration for chain 771002 and the complete starter ZIP.
 - [Docker full-node package](https://github.com/safeney/Tavchain/releases/tag/docker-771002-1): complete Linux amd64 archive with the executable, Compose configuration and network files.
 
@@ -36,7 +37,7 @@ These assets mirror the existing published downloads without changing their byte
 
 For a new Linux x86-64 node, use the [prebuilt image](https://github.com/safeney/Tavchain/pkgs/container/tavchain-fullnode) and [short Compose setup](operators/docker/README.registry.md). The image includes the client and current network configuration; no local image build or separate genesis download is required. The Compose file pins the accepted image by digest.
 
-Browse the complete [Hardhat starter source](examples/hardhat), [Docker packaging source](operators/docker) and [native packaging references](distribution/native1). The original Docker archive and local-build configuration remain available.
+Browse the complete [Hardhat starter source](examples/hardhat), [Docker packaging source](operators/docker) and [native bundle packaging](operators/native). The [earlier native build references](distribution/native1) remain available. The original Docker archive and local-build configuration remain available.
 
 Full-node testing does not establish validator-signing support for the native1 platforms. macOS and Windows ARM64 downloads are not available. No running validator is upgraded by this repository update.
 

@@ -1,4 +1,4 @@
-> Prepared for the 771002 testnet transition. Do not use this configuration until RPC reports chain ID 771002. Existing predecessor deployments do not carry forward.
+> Use Tavchain Testnet, chain ID 771002. Check the RPC chain ID before deploying. Predecessor-network deployments do not carry forward.
 
 # Tavchain Hardhat starter
 
@@ -26,7 +26,7 @@ Compiler profiles default and production use Solidity 0.8.21, optimizer enabled/
 npx hardhat run scripts/read-network.ts
 ```
 
-This reads chain ID, block and the existing Remix example contract's native balance. It is not a GLD balance query and submits no transaction. Chain ID must be 771002.
+This reads the public chain ID and block height. It requires no existing contract, reads no token balance and submits no transaction. Chain ID must be 771002.
 
 ## Store a dedicated test key
 
@@ -62,15 +62,15 @@ Use the artifact that actually deployed the contract. Local npm imports differ f
 
 ## Accepted public example
 
-On 29 October 2026, native encrypted keystore entry and Ignition deployed 1,000 GLD to the dedicated deployer. Creation/runtime, mint event, metadata, supply and balance matched. Blockscout verification matched the exact source and compiler settings, including five OpenZeppelin imports.
+On Tavchain Testnet, chain ID 771002, Hardhat Ignition deployed 1,000 GLD to the dedicated deployer. Creation/runtime, mint event, metadata, supply and balance matched. Blockscout verification matched the exact source and compiler settings, including five OpenZeppelin imports.
 
 - Contract: https://explorer.tavchain.safeney.com/address/0x9FEE6A0eAf071Dc6fFa1B6193cE1ab52E085F525?tab=contract
-- Deployment: https://explorer.tavchain.safeney.com/tx/0xb84870a2af6671a62f35681d350ad61aba7c173a03071078ef95207fb9c9ecbf
-- Block: 7725
+- Deployment: https://explorer.tavchain.safeney.com/tx/0xa62f6eedb3453475d819dbf865fce933cdcdae4e13604d37f135326f91a3b12c
+- Deployment block: 10792
 - Gas used: 545,641
 - Fee: 0.000613846125 Test TAV, an observed fee, not a future quote
 
-No token transfer was performed in this Hardhat public journey. The earlier Remix journey has its own contract and transfer evidence. Source verification is not a security audit or official-token designation. The explorer's separate license metadata is none; the source retains its MIT SPDX notice and this kit includes its MIT license and third-party notices.
+A [10-GLD transfer](https://explorer.tavchain.safeney.com/tx/0xa78e1dfc1c66accb0e24bf3d9a1027af564d04382d80a49f7979dcb4f732e7f4) succeeded at block 10833. At that block, the deployer held 990 GLD and the recipient held 10 GLD; total supply remained 1,000 GLD. Deployment and transfer fees totaled 0.000671911875 Test TAV. Later activity may change balances. This starter includes a deployment module; use the [token guide](https://docs.tavchain.safeney.com/tavchain/erc20-token#transfer-10-gld) for your own transfer. Source verification is not a security audit or official-token designation. The explorer's separate license metadata is none; the source retains its MIT SPDX notice and this kit includes its MIT license and third-party notices.
 
 ## Links and license
 
@@ -79,4 +79,4 @@ No token transfer was performed in this Hardhat public journey. The earlier Remi
 - Chain ID: 771002
 - Browser tutorial: https://docs.tavchain.safeney.com/tavchain/erc20-token
 
-This source kit uses MIT terms in LICENSE, preserving third-party rights/notices in THIRD-PARTY-NOTICES.md. Dependencies are fetched by npm, not bundled. No Tavchain node binary, node source, credential, keystore, dependency directory, build artifact or deployment journal is shipped. No release-key signature is provided; the HTTPS SHA-256 checksum detects changed bytes.
+This source kit uses MIT terms in LICENSE, preserving third-party rights/notices in THIRD-PARTY-NOTICES.md. Dependencies are fetched by npm, not bundled. No Tavchain node binary, node source, credential, keystore, dependency directory, build artifact or deployment journal is shipped. The released starter ZIP is listed in the network release's signed NETWORK-RELEASE.json; follow its [verification instructions](https://github.com/safeney/Tavchain/releases/download/network-771002-1/VERIFY.md) to authenticate the manifest and archive. A checksum alone detects changed bytes. The Git source directory is editable source, separate from that unchanged signed ZIP; use the current guide for network and example references.

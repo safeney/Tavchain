@@ -1,5 +1,7 @@
 # Tavchain full node with Docker Compose
-Tested on Linux amd64 with Docker Engine29.4.1 and Compose5.1.3. Public image-registry distribution is not provided; build this package locally.
+For a new node, use the [prebuilt-image setup](README.registry.md). It downloads the published image and needs no local build.
+
+This page covers the earlier archive/local-build workflow, tested on Linux amd64 with Docker Engine 29.4.1 and Compose 5.1.3. The authenticated [Docker release archive](https://github.com/safeney/Tavchain/releases/tag/docker-771002-1) includes the executable required for that build; this Git source directory omits it.
 
 This package wraps the released Linux amd64 client. It follows Tavchain Testnet (EVM 771002; native tavchaintestnet_771002-1) without registering a validator or using a wallet. Named Docker storage holds the new node's private identity and ledger. Never mount an existing validator home here.
 
@@ -37,4 +39,4 @@ For an upgrade, stop cleanly and follow that release's compatibility instruction
 ## What is retained
 Current full-history native settings and the authenticated 771002 network files are included. No snapshot restore, pruning, reset, automatic refill, wallet signing, telemetry or expiration is added. Source/dependency archives and notices remain available from the current authenticated node release; the image carries its original notices.
 
-The image is pinned to Linux amd64. Docker Desktop and emulation do not establish native Windows, macOS or ARM acceptance. See https://docs.tavchain.safeney.com/tavchain/operate/run-full-node for native release requirements.
+The image is pinned to Linux amd64. Docker Desktop and emulation do not establish native Windows, macOS or ARM acceptance. See https://docs.tavchain.safeney.com/tavchain/operate/node-native for the ready-to-run native bundles and their tested platforms.
