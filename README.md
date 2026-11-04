@@ -35,6 +35,15 @@ The node derives from Cronos and uses Cosmos SDK staking and CometBFT consensus.
 
 The initial four validators remain under shared administration. The testnet is unaudited; registration, active validator membership and independently controlled operation are different milestones.
 
+## Community
+
+- [Discord](https://discord.gg/H8BumxHXU) — developer and node-operator discussions.
+- [Telegram announcements](https://t.me/tavchain) — project updates.
+- [Telegram community](https://t.me/tavchaincommunity) — community discussion.
+- [LinkedIn](https://www.linkedin.com/showcase/tavchain/) — Tavchain on LinkedIn.
+
+Report security issues privately to support@safeney.com. Never share wallet recovery phrases or private keys in community channels.
+
 ## Downloads
 
 Use the versioned GitHub releases:
