@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="brand/tavchain-horizontal-inverse.svg">
+  <img src="brand/tavchain-horizontal-primary.svg" alt="Tavchain" width="320">
+</picture>
+
 # Tavchain
 
 Tavchain is a general-purpose, EVM-compatible Layer 1 for smart contracts and applications, shaped by Africa's needs and open to developers worldwide.
