@@ -22,6 +22,7 @@ The node derives from Cronos and uses Cosmos SDK staking and CometBFT consensus.
 | Native asset | Tavcoin (`TAV`), 18 decimals; base denomination `atav` |
 
 - [Documentation](https://docs.tavchain.safeney.com/)
+- [Whitepaper](https://docs.tavchain.safeney.com/tavchain/whitepaper) ([PDF](docs/whitepaper/Tavchain-Whitepaper-v0.3.pdf))
 - [Network configuration](NETWORK.md)
 - [Connect a wallet](https://docs.tavchain.safeney.com/tavchain/connect)
 - [Deploy a contract](https://docs.tavchain.safeney.com/tavchain/write-contract)
